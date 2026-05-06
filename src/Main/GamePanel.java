@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import GameState.GameStateManager;
 
 import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     //dimensions
     public static final int WIDTH =320;

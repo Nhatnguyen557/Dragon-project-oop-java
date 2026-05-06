@@ -32,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         super();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         setFocusable(true);
+        requestFocus();
 
     }
 
@@ -46,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     private void init(){
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        g = (Graphics2D) image.getGraphics() ;
+        g = (Graphics2D)  image.getGraphics();
         running = true ;
 
         gsm = new GameStateManager();
@@ -70,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
             elapsed = System.nanoTime() - start;
             wait = targetTime - elapsed / 1000000;
+            if(wait < 0) wait =5;
             try{
                 Thread.sleep(wait);
             }
@@ -100,18 +102,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+    public void keyTyped(KeyEvent key) {}
+
+    @Override
+    public void keyPressed(KeyEvent key) {
+    gsm.keyPressed(key.getKeyCode());
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+    public void keyReleased(KeyEvent key) {
+    gsm.keyReleased(key.getKeyCode());
     }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
-    }
-
 }

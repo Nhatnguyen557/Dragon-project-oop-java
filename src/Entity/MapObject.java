@@ -146,6 +146,9 @@ public abstract  class MapObject {
                 dx = 0;
                 xtemp = (currCol + 1) * tileSize - cwidth / 2;
             }
+            else{
+                xtemp += dy;
+            }
         }
 
         if(!falling){
@@ -154,7 +157,7 @@ public abstract  class MapObject {
                 falling = true;
             }
         }
-    }
+    }.
 
     public int getx() { return (int)x;}
     public int gety() {return (int)y;}

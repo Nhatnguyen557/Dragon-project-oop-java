@@ -1,5 +1,8 @@
-package Enity;
+package Entity;
 import java.awt.image.BufferedImage;
+
+
+
 public class Animation {
   private BufferedImage[] frames;
   private int currentFrame;
@@ -12,12 +15,12 @@ public class Animation {
   }
   public void setFrames (BufferedImage[] frames) {
     this.frames = frames;
-    currentFrames = 0;
+    currentFrame = 0;
     startTime = System.nanoTime();
     playedOnce = false;
   }
   public void setDelay(long d) {delay = d;}
-  public void setFrame (indt i) {currentFrame = i;}
+  public void setFrame (int i) {currentFrame = i;}
 
   public void update() {
     if (delay == -1) return;
@@ -26,7 +29,7 @@ public class Animation {
       currentFrame++;
       startTime = System.nanoTime();
     }
-    if(currentFrame == frdames.lenght) {
+    if(currentFrame == frames.length) {
       currentFrame = 0;
       playedOnce = true;
     }

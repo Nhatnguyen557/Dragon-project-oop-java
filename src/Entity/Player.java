@@ -1,10 +1,16 @@
 package Entity;
+
 import TileMap.*;
-import java.until.ArrayList;
+
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
 import java.awt.*;
+
 import java.awt.image.BufferedImage;
-public class Player extends MapObject {
+
+public class Player extends MapObject{
   // player stuff
   private int health;
   private int maxHealth;
@@ -12,7 +18,7 @@ public class Player extends MapObject {
   private int maxFire;
   private boolean dead;
   private boolean flinching;
-  private long flinchingTimer;
+  private long flinchTimer;
 
   // fireball
   private boolean firing;
@@ -35,7 +41,7 @@ public class Player extends MapObject {
   };
 
   //animation actions
-  private static fianl int IDLE = 0;
+  private static final int IDLE = 0;
   private static final int WALKING = 1;
   private static final int JUMPING = 2;
   private static final int FALLING = 3;
@@ -64,7 +70,7 @@ public class Player extends MapObject {
     fire = maxFire = 2500;
 
     fireCost = 200;
-    fireBallDamgage = 5;
+    fireBallDamage = 5;
     //fireBalls = new ArrayList<FireBall>();
 
     scratchDamage = 8;
@@ -74,7 +80,7 @@ public class Player extends MapObject {
     try {
       BufferedImage spritesheet = ImageIO.read(
         getClass().getResourceAsStream(
-          "/Sprite/Player/playersprites.gif"
+          "/Resources/Sprites/Player/playersprites.gif"
         )
       );
 
@@ -100,9 +106,11 @@ public class Player extends MapObject {
               height
             );
           }
+
+        
         }
 
-        sprite.add(bi);
+        sprites.add(bi);
       }
     }
     catch(Exception e) {
@@ -158,7 +166,7 @@ public class Player extends MapObject {
       !(jumping || falling)) {
       dx = 0;
     }
-
+  
     // jumping
     if(jumping && !falling) {
       dy = jumpStart;
@@ -174,12 +182,13 @@ public class Player extends MapObject {
       if(dy < 0 && !jumping) dy += stopJumpSpeed;
 
       if(dy > maxFallSpeed) dy = maxFallSpeed;
+    }
   }
-  public void update() {
+    public void update() {
 
     // update position
     getNextPosition();
-    checkTileMapCollistion();
+    checkTileMapCollision();
     setPosition(xtemp, ytemp);
 
     // set animation
@@ -190,15 +199,16 @@ public class Player extends MapObject {
         animation.setDelay(50);
         width = 60;
       }
-      else if(firing) {
-        if(currentActiond != FIREBALL) {
-          currentAction = FIREBALL;
-          animation.setFrames(sprites.get(FIREBALL));
-          animation.setDelay (100);
-          width = 30;
-        }
+    }
+    else if(firing) {
+      if(currentAction != FIREBALL) {
+        currentAction = FIREBALL;
+        animation.setFrames(sprites.get(FIREBALL));
+        animation.setDelay (100);
+        width = 30;
       }
-      else if(dy > 0) {
+    }
+    else if(dy > 0) {
         if(gliding) {
           if(currentAction != GLIDING) {
             currentAction = GLIDING;
@@ -208,11 +218,12 @@ public class Player extends MapObject {
           }
         }
         else if(currentAction != FALLING) {
-          currentAction != FALLING;
+          currentAction = FALLING;
           animation.setFrames(sprites.get(FALLING));
           animation.setDelay(100);
           width = 30;
         }
+
       }
       else if(dy<0) {
         if(currentAction != JUMPING) {
@@ -225,13 +236,13 @@ public class Player extends MapObject {
       else if(left || right) {
         if(currentAction != WALKING) {
           currentAction = WALKING;
-          animation.setFrames(sprites.get(WALKING);
+          animation.setFrames(sprites.get(WALKING));
           animation.setDelay(40);
           width = 30;
         }
       }
       else {
-        if(currenAction != IDLE) {
+        if(currentAction != IDLE) {
           currentAction = IDLE;
           animation.setFrames(sprites.get(IDLE));
           animation.setDelay(400);
@@ -244,13 +255,14 @@ public class Player extends MapObject {
       if(currentAction != SCRATCHING && currentAction != FIREBALL)
         if(right) facingRight = true;
         if(left) facingRight = false;
-    }
-  }
+      }
+    
+
   public void draw(Graphics2D g) {
     setMapPosition();
 
     // draw player
-    if(fliching) {
+    if(flinching) {
       long elapsed =
         (System.nanoTime() - flinchTimer) / 1000000;
       if(elapsed / 100 % 2 ==0) {
@@ -274,5 +286,6 @@ public class Player extends MapObject {
         height,
         null
       );
-  }  
+    }
+  }
 }

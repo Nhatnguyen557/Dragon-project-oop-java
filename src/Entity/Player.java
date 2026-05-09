@@ -12,7 +12,7 @@ public class Player extends MapObject {
   private int maxFire;
   private boolean dead;
   private boolean flinching;
-  private long flinchingTime;
+  private long flinchingTimer;
 
   // fireball
   private boolean firing;
@@ -121,6 +121,53 @@ public class Player extends MapObject {
   public void setGliding(boolean b) {
     gliding = b;
   }
+
+  public void getNextPosition() {
+
+    // movement
+    if(left) {
+      dx-= moveSpeed;
+      if(dx < -maxSpeed) {
+        dx = -maxSpeed;
+      }
+    }
+    else if(right) {
+      dx += moveSpeed;
+      if(dx > maxSpeed) {
+        dx = maxSpeed;
+      }
+    }
+    else {
+      if(dx > 0) {
+        dx -= stopSpeed;
+        if(dx > 0) {
+          dx = 0;
+        }
+      }
+    }
+    // cannot attack while attacking, except in air
+    if(
+      (currentAction == SCRATCHING || currentAction == FIREBALL) &&
+      !(jumping || falling)) {
+      dx = 0;
+    }
+
+    // jumping
+    if(jumping && !falling) {
+      dy = jumpStart;
+      falling = true;
+    }
+
+    // falling
+    if(falling) {
+      if(dy > 0 && gliding) dy += fallSpeed * 0.1;
+      else dy += fallSpeed;
+
+      if(dy > 0) jumping = false;
+      if(dy < 0 && !jumping) dy += stopJumpSpeed;
+
+      if(dy > maxFallSpeed) dy = maxFallSpeed;
+  }
   public void update() {
 
     // update position
@@ -168,6 +215,57 @@ public class Player extends MapObject {
           width = 30;
         }
       }
-      else if(
+      else if(left || right) {
+        if(currentAction != WALKING) {
+          currentAction = WALKING;
+          animation.setFrames(sprites.get(WALKING);
+          animation.setDelay(40);
+          width = 30;
+        }
+      }
+      else {
+        if(currenAction != IDLE) {
+          currentAction = IDLE;
+          animation.setFrames(sprites.get(IDLE));
+          animation.setDelay(400);
+          width = 30;
+        }
+      }
+      animation.update();
+
+      //set direction
+      if(currentAction != SCRATCHING && currentAction != FIREBALL)
+        if(right) facingRight = true;
+        if(left) facingRight = false;
+    }
   }
+  public void draw(Graphics2D g) {
+    setMapPosition();
+
+    // draw player
+    if(fliching) {
+      long elapsed =
+        (System.nanoTime() - flinchTimer) / 1000000;
+      if(elapsed / 100 % 2 ==0) {
+        return;
+      }
+    }
+    if(facingRight) {
+      g.drawImage(
+        animation.getImage(),
+        (int) (x + xmap - width/2),
+        (int) (y + ymap - height/2),
+        null
+      );
+    }
+    else {
+      g.drawImage (
+        animation.getImage(),
+        (int) (x + xmap - width/2 + width),
+        (int) (y + ymap - height/2),
+        -width,
+        height,
+        null
+      );
+  }  
 }

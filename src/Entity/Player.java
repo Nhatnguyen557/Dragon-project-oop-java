@@ -77,6 +77,8 @@ public class Player extends MapObject {
           "/Sprite/Player/playersprites.gif"
         )
       );
+
+      sprites = new ArrayList<BufferedImage[]>();
       for(int i = 0; i<7; i++) {
         BufferedImage[] bi =
           new BufferedImage[numFrames[i]];
@@ -106,6 +108,11 @@ public class Player extends MapObject {
     catch(Exception e) {
       e.printStackTrace();
     }
+
+    animation = new Animation();
+    currentAction = IDLE;
+    animation.setFrames(sprites.get(IDLE));
+    animation.setDelay(400);
   }
   public int getHealth() {return health;}
   public int getMaxHealth(){return maxHealth;}

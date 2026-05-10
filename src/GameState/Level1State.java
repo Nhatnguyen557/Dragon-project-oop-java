@@ -19,6 +19,8 @@ public class Level1State extends GameState {
 
     private ArrayList<Enemy> enemies;
 
+    private HUD hud;
+
     public Level1State(GameStateManager gsm ){
         this.gsm=gsm;
         init();
@@ -41,8 +43,8 @@ public class Level1State extends GameState {
         s = new Slugger(tileMap);
         s.setPosition(100, 00);
         enemies.add(s);
-        
 
+        hud = new HUD(player);
     }
     public void update() {
         // update player
@@ -76,6 +78,8 @@ public class Level1State extends GameState {
             enemies.get(i).draw(g);
         }
 
+        // draw hud
+        hud.draw(g);
     }    
     public void keyPressed(int k) {
         if(k == KeyEvent.VK_LEFT) player.setLeft(true);

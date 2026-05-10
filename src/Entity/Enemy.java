@@ -1,8 +1,8 @@
 package Entity;
 
-importTileMap.TileMap;
+import TileMap.TileMap;
 
-public class Enemy extends MapObject {
+public  class Enemy extends MapObject {
   protected int health;
   protected int maxHealth;
   protected boolean dead;
@@ -23,8 +23,9 @@ public class Enemy extends MapObject {
     if(health <0) health = 0;
     if(health == 0) dead = true;
     flinching = true;
-    flinchTimer = Systen.nanoTime();
+    flinchTimer = System.nanoTime();
 }
 
 public void update() {}
     
+}

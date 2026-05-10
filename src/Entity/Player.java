@@ -107,6 +107,54 @@ public class Player extends MapObject {
     public void setScratching() { scratching = true; }
     public void setGliding(boolean b) { gliding = b; }
 
+    public void checkAttack(ArrayList<Enemy> enemies ){
+
+      // loop through enemies 
+      for(int i = 0; i < enemies.size(); i++){
+
+        Enemy e = enemies.get(i);
+
+        // scratch attack
+        if(scratching){
+          if(facingRight){
+            if(e.getx() > x && e.getx() < x + scratchRange && e.gety() > y - height /2 && e.gety() < y + height / 2){
+              e.hit(scratchDamage);
+            }
+          }
+          else{
+            if(
+              e.getx() < x && e.getx() > x - scratchRange && e.gety() > y - height / 2 && e.gety() < y + height / 2){
+                e.hit(scratchDamage);
+            }
+          }
+        }
+
+        // fireballs
+        for(int j = 0; j < fireBalls.size(); j++){
+          if(fireBalls.get(j).intersects(e)){
+            e.hit(fireBallDamage);
+            fireBalls.get(j).setHit();
+            break;
+          }
+        }
+
+        // check enemy collision
+        if(intersects(e)){
+          hit(e.getDamage());
+        }
+      }
+
+    }
+
+    public void hit(int damage ){
+      if(flinching) return;
+      health -= damage;
+      if(health < 0) health = 0;
+      if(health == 0) dead = true;
+      flinching = true;
+      flinchTimer = System.nanoTime();
+    }
+
     public void getNextPosition() {
         // movement
         if (left) {
@@ -183,6 +231,15 @@ public class Player extends MapObject {
             }
         }
 
+        // check done flinching
+        if(flinching){
+          long elapsed =(System.nanoTime() - flinchTimer) / 1000000;
+
+          if(elapsed > 1000){
+            flinching = false;
+          }
+        }
+
         // set animation
         if (scratching) {
             if (currentAction != SCRATCHING) {
@@ -255,7 +312,9 @@ public class Player extends MapObject {
         // draw player
         if (flinching) {
             long elapsed = (System.nanoTime() - flinchTimer) / 1000000;
-            if (elapsed / 100 % 2 == 0) return;
+            if (elapsed / 100 % 2 == 0) {
+              return;
+            }
         }
 
         super.draw(g);

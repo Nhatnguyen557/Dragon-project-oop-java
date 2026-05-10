@@ -7,9 +7,6 @@ import javax.swing.JPanel;
 
 import GameState.GameStateManager;
 
-import javax.swing.JPanel;
-
-@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     //dimensions
     public static final int WIDTH =320;
@@ -94,17 +91,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g2.drawImage(image, 0, 0,WIDTH * SCALE, HEIGHT * SCALE , null);
         g2.dispose();
     }
-    
-    public void KeyTyped ( KeyEvent key) {}
-    public void KeyPressed(KeyEvent key) {
-        gsm.keyPressed(key.getKeyCode());
-    }
-    public void KeyReleased(KeyEvent key) {
-        gsm.keyReleased(key.getKeyCode());
-    }
 
     @Override
-    public void keyTyped(KeyEvent key) {}
+    public void keyTyped(KeyEvent key) {
+    }
 
     @Override
     public void keyPressed(KeyEvent key) {

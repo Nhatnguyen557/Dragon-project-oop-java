@@ -2,6 +2,7 @@ package GameState;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 
 import TileMap.*;
@@ -14,6 +15,8 @@ public class Level1State extends GameState {
     private Background bg;
 
     private Player player;
+
+    private ArrayList<Enemy> enemies;
 
     public Level1State(GameStateManager gsm ){
         this.gsm=gsm;

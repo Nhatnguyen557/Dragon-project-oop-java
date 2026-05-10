@@ -25,4 +25,6 @@ public class Enemy extends MapObject {
     flinching = true;
     flinchTimer = Systen.nanoTime();
 }
+
+public void update() {}
     

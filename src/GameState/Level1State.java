@@ -3,6 +3,7 @@ package GameState;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import Audio.AudioPlayer;
 
 
 import TileMap.*;
@@ -21,6 +22,8 @@ public class Level1State extends GameState {
     private ArrayList<Explosion> explosions;
 
     private HUD hud;
+
+    private AudioPlayer bgMusic;
 
     private boolean victory = false;
 
@@ -46,13 +49,15 @@ public class Level1State extends GameState {
         explosions = new ArrayList<Explosion>();
 
         hud = new HUD(player);
+
+        bgMusic = new AudioPlayer("/Resources/Music/level1-1.wav");
+        bgMusic.play();
     }
 
     private void populateEnemies(){
         enemies = new ArrayList<Enemy>();
 
         Slugger s;
-
         Point[] points = new Point[]{
             new Point(200,100),
             new Point(860,200),

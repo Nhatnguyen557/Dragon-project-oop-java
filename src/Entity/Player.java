@@ -2,6 +2,9 @@ package Entity;
 
 import TileMap.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import Audio.AudioPlayer;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -43,6 +46,8 @@ public class Player extends MapObject {
     private static final int FIREBALL = 5;
     private static final int SCRATCHING = 6;
 
+    private HashMap<String, AudioPlayer> sfx;
+
     public Player(TileMap tm) {
         super(tm);
         width = 30;
@@ -50,8 +55,8 @@ public class Player extends MapObject {
         cwidth = 20;
         cheight = 20;
 
-        moveSpeed = 0.3;
-        maxSpeed = 1.6;
+        moveSpeed = 0.2;
+        maxSpeed = 1.2;
         stopSpeed = 0.4;
         fallSpeed = 0.15;
         maxFallSpeed = 4.0;
@@ -96,6 +101,10 @@ public class Player extends MapObject {
         currentAction = IDLE;
         animation.setFrames(sprites.get(IDLE));
         animation.setDelay(400);
+
+        sfx = new HashMap<String, AudioPlayer>();
+        sfx.put("jump", new AudioPlayer("/Resources/SFX/jump.wav"));
+        sfx.put("scratch", new AudioPlayer("/Resources/SFX/scratch.wav"));
     }
 
     public int getHealth() { return health; }
@@ -180,8 +189,10 @@ public class Player extends MapObject {
 
         // jumping
         if (jumping && !falling) {
+          sfx.get("jump").play();
             dy = jumpStart;
             falling = true;
+
         }
 
         // falling
@@ -243,6 +254,7 @@ public class Player extends MapObject {
         // set animation
         if (scratching) {
             if (currentAction != SCRATCHING) {
+              sfx.get("scratch").play();
                 currentAction = SCRATCHING;
                 animation.setFrames(sprites.get(SCRATCHING));
                 animation.setDelay(50);

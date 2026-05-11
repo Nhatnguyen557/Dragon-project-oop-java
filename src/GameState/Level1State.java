@@ -105,7 +105,7 @@ public class Level1State extends GameState {
         }
         // check win game
         
-        if(victory) return; // Nếu đã thắng thì dừng cập nhật logic
+        if(victory) return; 
 
         player.update();
         tileMap.setPosition(
@@ -113,7 +113,6 @@ public class Level1State extends GameState {
         GamePanel.HEIGHT / 2 - player.gety()
         );
 
-        // Ví dụ: Nếu tọa độ x của player vượt quá 2000 (cuối map)
         if(player.getx() > 3100) {
         victory = true;
         }

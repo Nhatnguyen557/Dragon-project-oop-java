@@ -18,6 +18,9 @@ public class Player extends MapObject {
     private boolean dead;
     private boolean flinching;
     private long flinchTimer;
+    private double startX;
+    private double startY;
+
 
     // fireball
     private boolean firing;
@@ -48,6 +51,8 @@ public class Player extends MapObject {
 
     private HashMap<String, AudioPlayer> sfx;
 
+    public boolean isDead() { return dead;}
+
     public Player(TileMap tm) {
         super(tm);
         width = 30;
@@ -56,7 +61,7 @@ public class Player extends MapObject {
         cheight = 20;
 
         moveSpeed = 0.2;
-        maxSpeed = 1.2;
+        maxSpeed = 1.6;
         stopSpeed = 0.4;
         fallSpeed = 0.15;
         maxFallSpeed = 4.0;
@@ -74,6 +79,9 @@ public class Player extends MapObject {
 
         scratchDamage = 8;
         scratchRange = 40;
+
+        startX = x;
+        startY = y;
 
         // load sprites
         try {
@@ -107,6 +115,12 @@ public class Player extends MapObject {
         sfx.put("scratch", new AudioPlayer("/Resources/SFX/scratch.wav"));
     }
 
+    public void setStartPoint(double x, double y) {
+    this.startX = x;
+    this.startY = y;
+    setPosition(x, y);
+    }
+
     public int getHealth() { return health; }
     public int getMaxHealth() { return maxHealth; }
     public int getFire() { return fire; }
@@ -115,6 +129,27 @@ public class Player extends MapObject {
     public void setFiring() { firing = true; }
     public void setScratching() { scratching = true; }
     public void setGliding(boolean b) { gliding = b; }
+
+    // reset 
+    public void reset() {
+    health = maxHealth;
+    dead = false;
+    flinching = false;
+    firing = false;
+    scratching = false;
+    gliding = false;
+    
+    // Đưa về vị trí xuất phát
+    setPosition(startX, startY);
+    
+    // Reset vận tốc để không bị trôi khi vừa hồi sinh
+    dx = 0;
+    dy = 0;
+    
+    // Reset hành động về IDLE
+    currentAction = IDLE;
+    animation.setFrames(sprites.get(IDLE));
+    }
 
     public void checkAttack(ArrayList<Enemy> enemies ){
 
@@ -156,12 +191,17 @@ public class Player extends MapObject {
     }
 
     public void hit(int damage ){
-      if(flinching) return;
+      if(flinching || dead) return;
       health -= damage;
       if(health < 0) health = 0;
-      if(health == 0) dead = true;
-      flinching = true;
-      flinchTimer = System.nanoTime();
+      if(health == 0) {
+        dead = true;
+        flinching = true;
+        flinchTimer = System.nanoTime();
+      } else{
+        flinching = true;
+        flinchTimer = System.nanoTime();
+      }
     }
 
     public void getNextPosition() {
@@ -208,6 +248,14 @@ public class Player extends MapObject {
     }
 
     public void update() {
+        // time reset
+        if(dead) {
+        long elapsed = (System.nanoTime() - flinchTimer) / 1000000;
+        if(elapsed > 1500) { // Chờ 1.5 giây rồi reset
+            reset();
+        }
+        return; 
+        }
         // update position
         getNextPosition();
         checkTileMapCollision();
@@ -314,6 +362,11 @@ public class Player extends MapObject {
     }
 
     public void draw(Graphics2D g) {
+
+        // remove player if dead
+        if(dead) return;
+
+
         setMapPosition();
 
         // draw fireballs
@@ -330,5 +383,6 @@ public class Player extends MapObject {
         }
 
         super.draw(g);
+
     }
 }
